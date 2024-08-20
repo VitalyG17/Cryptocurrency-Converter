@@ -1,0 +1,39 @@
+.container {
+  display: block;
+  padding: 24px;
+  width: 397px;
+  height: 367px;
+  border-radius: 20px;
+  box-shadow: 0 0 24px 0 rgba(90, 89, 89, 0.1);
+  background: var(--base);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-title {
+    font-weight: 700;
+    font-size: 24px;
+  }
+}
+
+.exchange-rate {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #5c5c5c;
+  padding: 8px 0;
+
+  &__title {
+    font-weight: 400;
+    font-size: 12px;
+    color: #5c5c5c;
+  }
+
+  &__current {
+    font-weight: 600;
+    font-size: 12px;
+    color: #5c5c5c;
+  }
+}

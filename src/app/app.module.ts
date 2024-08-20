@@ -11,9 +11,16 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatLineModule} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { ExchangeComponent } from './ui-components/exchange/exchange.component';
+import { SendComponent } from './ui-components/send/send.component';
+import { ReceiveComponent } from './ui-components/receive/receive.component';
+import { SwitchButtonComponent } from './ui-components/switch-button/switch-button.component';
+import { SelectCurrencyComponent } from './ui-components/select-currency/select-currency.component';
+import { ListItemComponent } from './ui-components/list-item/list-item.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, MainPageComponent, ExchangeComponent, SendComponent, ReceiveComponent, SwitchButtonComponent, SelectCurrencyComponent, ListItemComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

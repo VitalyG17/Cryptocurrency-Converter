@@ -1,0 +1,33 @@
+.list {
+  max-height: 398px;
+  padding: 12px 20px;
+
+  &-item {
+    border-radius: 12px !important;
+    align-items: center;
+  }
+
+  &-item:hover {
+    cursor: pointer;
+    background: #b0dd63;
+  }
+}
+
+mat-list {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+
+  &-thumb {
+    background-color: green;
+    border-radius: 20px;
+  }
+
+  &-track {
+    background: #f4f4f4;
+    border-radius: 20px;
+  }
+}

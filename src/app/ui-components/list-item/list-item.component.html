@@ -1,0 +1,9 @@
+<mat-list class="list">
+  <mat-list-item class="list-item" *ngFor="let crypto of cryptos">
+    <mat-icon matListItemIcon>folder</mat-icon>
+    <h3 matListItemTitle>{{ crypto.title }}</h3>
+    <p matListItemLine>
+      <span>{{ crypto.price }}</span>
+    </p>
+  </mat-list-item>
+</mat-list>

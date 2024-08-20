@@ -1,0 +1,15 @@
+<div class="container">
+  <ng-container *ngIf="isCrypto; else currencyList">
+    <div class="example-button-row">
+      <button class="curr-button" mat-button>Криптовалюты</button>
+    </div>
+  </ng-container>
+
+  <ng-template #currencyList>
+    <ng-container *ngFor="let curr of currency">
+      <div class="example-button-row">
+        <button class="curr-button" mat-button>{{ curr }}</button>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>
