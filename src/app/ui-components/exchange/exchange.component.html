@@ -1,10 +1,23 @@
 <div class="container">
   <div class="header">
     <span class="header-title">Обмен</span>
-    <button mat-mini-fab aria-label="change">
-      <mat-icon>sync_alt</mat-icon>
+    <button class="change-btn" mat-mini-fab aria-label="change">
+      <mat-icon style="color: #7DBD42;">sync_alt</mat-icon>
     </button>
   </div>
+
+  <form class="form" [formGroup]="exchangeForm">
+    <!--Вы отдаете-->
+    <div class="form__group give">
+      <label class="label first-label" for="give">Отдаете</label>
+      <input class="form-input" id="give" type="number" [formControl]="exchangeForm.controls.give">
+    </div>
+    <!--Вы получаете-->
+    <div class="form__group receive">
+      <label class="label" for="receive">Получаете</label>
+      <input class="form-input" id="receive" type="number" [formControl]="exchangeForm.controls.receive">
+    </div>
+  </form>
 
   <div class="exchange-rate">
     <span class="exchange-rate__title">Курс обмена</span>
