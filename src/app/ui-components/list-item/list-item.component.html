@@ -1,9 +1,18 @@
-<mat-list class="list">
+<mat-list class="list" *ngIf="isCrypto; else banksList">
   <mat-list-item class="list-item" *ngFor="let crypto of cryptoList">
-    <mat-icon matListItemIcon>folder</mat-icon>
+    <mat-icon class="img-circle" matListItemIcon>currency_bitcoin</mat-icon>
     <h3 matListItemTitle>{{ crypto.name }} {{ crypto.symbol }}</h3>
     <p matListItemLine>
       <span>{{ crypto.priceUsd | usdTransform }}</span>
     </p>
   </mat-list-item>
 </mat-list>
+
+<ng-template #banksList>
+  <mat-list class="list">
+    <mat-list-item class="list-item" *ngFor="let bank of banksInformation">
+      <img class="img-circle" matListItemIcon src="{{ bank.image }}" alt="{{ bank.name }}">
+      <h3 matListItemTitle>{{ bank.name }}</h3>
+    </mat-list-item>
+  </mat-list>
+</ng-template>

@@ -31,3 +31,12 @@ mat-list {
     border-radius: 20px;
   }
 }
+
+.img-circle {
+  align-items: center;
+  padding: 8px;
+  width: 48px !important;
+  height: 48px !important;
+  box-shadow: 0 0 8px 0 rgba(40, 46, 34, 0.12);
+  border-radius: 15px;
+}

@@ -1,7 +1,9 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {HttpService} from '../../services/http.service';
 import {Subject, takeUntil} from 'rxjs';
 import {AnswerCrypto} from '../../types/server-answer';
+import {banksInformation} from '../../banksInformation';
+import {BankInfo} from '../../types/bank-info';
 
 @Component({
   selector: 'app-list-item',
@@ -9,7 +11,11 @@ import {AnswerCrypto} from '../../types/server-answer';
   styleUrls: ['./list-item.component.scss'],
 })
 export class ListItemComponent implements OnInit, OnDestroy {
+  @Input() isCrypto: boolean = true;
+
   protected cryptoList: AnswerCrypto[] = [];
+
+  protected readonly banksInformation: BankInfo[] = banksInformation;
 
   private destroy$: Subject<void> = new Subject<void>();
 

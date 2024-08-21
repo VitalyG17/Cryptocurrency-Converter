@@ -21,7 +21,7 @@ import {ListItemComponent} from './ui-components/list-item/list-item.component';
 import {MatInputModule} from '@angular/material/input';
 import {HttpService} from './services/http.service';
 import {ApiKeyInterceptorService} from './services/api-key.interceptor.service';
-import { UsdTransformPipe } from './pipes/usd-transform.pipe';
+import {UsdTransformPipe} from './pipes/usd-transform.pipe';
 
 @NgModule({
   declarations: [
