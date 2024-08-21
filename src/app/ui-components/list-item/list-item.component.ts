@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {HttpService} from '../../services/http.service';
 import {Subject, takeUntil} from 'rxjs';
-import {AnswerCrypto} from '../../types/server-answer';
+import {AnswerCrypto} from '../../types/cryptoServer-answer';
 import {banksInformation} from '../../banksInformation';
 import {BankInfo} from '../../types/bank-info';
 

@@ -21,6 +21,8 @@
 
   <div class="exchange-rate">
     <span class="exchange-rate__title">Курс обмена</span>
-    <span class="exchange-rate__current">97.26RUB = 1USDT</span>
+    <span class="exchange-rate__current">
+  {{ currentValue?.conversion_rates?.['RUB'] ? (currentValue!.conversion_rates['RUB'].toPrecision(5) + ' RUB = 1 USD') : 'Загрузка...' }}
+</span>
   </div>
 </div>

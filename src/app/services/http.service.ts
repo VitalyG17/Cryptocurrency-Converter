@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable, of} from 'rxjs';
-import {AnswerCrypto, CryptoApiResponse} from '../types/server-answer';
+import {AnswerCrypto, CryptoApiResponse} from '../types/cryptoServer-answer';
 
 @Injectable()
 export class HttpService {

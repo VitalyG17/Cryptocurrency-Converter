@@ -22,6 +22,7 @@ import {MatInputModule} from '@angular/material/input';
 import {HttpService} from './services/http.service';
 import {ApiKeyInterceptorService} from './services/api-key.interceptor.service';
 import {UsdTransformPipe} from './pipes/usd-transform.pipe';
+import {CurrencyService} from './services/currency.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,15 @@ import {UsdTransformPipe} from './pipes/usd-transform.pipe';
     MatButtonModule,
     MatInputModule,
   ],
-  providers: [HttpService, {provide: HTTP_INTERCEPTORS, useClass: ApiKeyInterceptorService, multi: true}],
+  providers: [
+    HttpService,
+    CurrencyService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiKeyInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
