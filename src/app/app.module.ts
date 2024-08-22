@@ -19,10 +19,10 @@ import {SwitchButtonComponent} from './ui-components/switch-button/switch-button
 import {SelectCurrencyComponent} from './ui-components/select-currency/select-currency.component';
 import {ListItemComponent} from './ui-components/list-item/list-item.component';
 import {MatInputModule} from '@angular/material/input';
-import {HttpService} from './services/http.service';
-import {ApiKeyInterceptorService} from './services/api-key.interceptor.service';
 import {UsdTransformPipe} from './pipes/usd-transform.pipe';
 import {CurrencyService} from './services/currency.service';
+import {CryptoService} from './services/crypto.service';
+import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.service';
 
 @NgModule({
   declarations: [
@@ -51,11 +51,11 @@ import {CurrencyService} from './services/currency.service';
     MatInputModule,
   ],
   providers: [
-    HttpService,
     CurrencyService,
+    CryptoService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: ApiKeyInterceptorService,
+      useClass: CoinGeckoInterceptorService,
       multi: true,
     },
   ],
