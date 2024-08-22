@@ -13,8 +13,6 @@ import {MatLineModule} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MainPageComponent} from './pages/main-page/main-page.component';
 import {ExchangeComponent} from './ui-components/exchange/exchange.component';
-import {SendComponent} from './ui-components/send/send.component';
-import {ReceiveComponent} from './ui-components/receive/receive.component';
 import {SwitchButtonComponent} from './ui-components/switch-button/switch-button.component';
 import {SelectCurrencyComponent} from './ui-components/select-currency/select-currency.component';
 import {ListItemComponent} from './ui-components/list-item/list-item.component';
@@ -23,18 +21,18 @@ import {UsdTransformPipe} from './pipes/usd-transform.pipe';
 import {CurrencyService} from './services/currency.service';
 import {CryptoService} from './services/crypto.service';
 import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.service';
+import {SendReceiveComponent} from './ui-components/send-receive/send-receive.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
     ExchangeComponent,
-    SendComponent,
-    ReceiveComponent,
     SwitchButtonComponent,
     SelectCurrencyComponent,
     ListItemComponent,
     UsdTransformPipe,
+    SendReceiveComponent,
   ],
   imports: [
     BrowserModule,

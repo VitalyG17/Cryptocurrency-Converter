@@ -1,4 +1,10 @@
 <div class="container">
-  <button mat-flat-button class="change-button">Валюта</button>
-  <button mat-flat-button class="change-button">Криптовалюта</button>
+  <button mat-flat-button class="change-button" [class.active]="selectedOption === PaymentOption.Currency"
+          (click)="selectOption(PaymentOption.Currency)">
+    Валюта
+  </button>
+  <button mat-flat-button class="change-button" [class.active]="selectedOption === PaymentOption.Crypto"
+          (click)="selectOption(PaymentOption.Crypto)">
+    Криптовалюта
+  </button>
 </div>

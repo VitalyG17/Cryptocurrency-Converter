@@ -1,7 +1,12 @@
 <app-main-page>
   <div class="container">
-    <app-send></app-send>
-    <app-receive></app-receive>
+    <app-send-receive
+      [title]="'Вы отправляете'"
+    ></app-send-receive>
+    <app-send-receive
+      [title]="'Вы получаете'"
+      [isCrypto]="true"
+    ></app-send-receive>
     <app-exchange></app-exchange>
   </div>
 </app-main-page>

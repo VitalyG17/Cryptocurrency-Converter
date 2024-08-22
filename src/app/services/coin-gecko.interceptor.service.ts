@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 @Injectable()
 export class CoinGeckoInterceptorService implements HttpInterceptor {
-  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const apiUrl: string = 'https://api.coingecko.com/api/v3';
 
     if (req.url.startsWith(apiUrl)) {
