@@ -22,6 +22,7 @@ import {CurrencyService} from './services/currency.service';
 import {CryptoService} from './services/crypto.service';
 import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.service';
 import {SendReceiveComponent} from './ui-components/send-receive/send-receive.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {SendReceiveComponent} from './ui-components/send-receive/send-receive.co
     MatLineModule,
     MatButtonModule,
     MatInputModule,
+    MatPaginatorModule,
   ],
   providers: [
     CurrencyService,

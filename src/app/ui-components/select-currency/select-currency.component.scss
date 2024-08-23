@@ -23,5 +23,12 @@
 
 .example-button-row {
   font-size: 14px;
-  padding: 4px 12px 6px 12px !important;
+  padding: 4px 8px 6px 8px !important;
+}
+
+.nav-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  user-select: none;
 }
