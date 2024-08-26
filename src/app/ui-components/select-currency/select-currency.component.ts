@@ -10,6 +10,8 @@ import {AnswerCurrency} from '../../types/currencyServer-answer';
 export class SelectCurrencyComponent implements OnInit {
   @Input() isCrypto: boolean = false;
 
+  protected hasError: boolean = false;
+
   protected currency: string[] = [];
 
   protected currentIndex: number = 0;
@@ -22,8 +24,13 @@ export class SelectCurrencyComponent implements OnInit {
 
   public ngOnInit(): void {
     this.currencyService.getCurrentExchangeRate('USD').subscribe((data: AnswerCurrency) => {
-      this.conversionRates = data.conversion_rates;
-      this.currency = Object.keys(this.conversionRates);
+      if (data && data.conversion_rates && Object.keys(data.conversion_rates).length > 0) {
+        this.conversionRates = data.conversion_rates;
+        this.currency = Object.keys(this.conversionRates);
+        this.hasError = false;
+      } else {
+        this.hasError = true;
+      }
     });
   }
 

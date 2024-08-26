@@ -23,6 +23,7 @@ import {CryptoService} from './services/crypto.service';
 import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.service';
 import {SendReceiveComponent} from './ui-components/send-receive/send-receive.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {ExchangeService} from './services/exchange.service';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
   providers: [
     CurrencyService,
     CryptoService,
+    ExchangeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CoinGeckoInterceptorService,

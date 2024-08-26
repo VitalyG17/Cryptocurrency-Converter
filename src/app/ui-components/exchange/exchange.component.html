@@ -10,12 +10,19 @@
     <!--Вы отдаете-->
     <div class="form__group give">
       <label class="label first-label" for="give">Отдаете</label>
-      <input class="form-input" id="give" type="number" [formControl]="exchangeForm.controls.give">
+      <div class="input-container">
+        <img *ngIf="selectedGiveImage" [src]="selectedGiveImage" class="input-icon" alt="Selected Give Image">
+        <input class="form-input" id="give" type="text" [formControl]="exchangeForm.controls.give">
+      </div>
     </div>
+
     <!--Вы получаете-->
     <div class="form__group receive">
       <label class="label" for="receive">Получаете</label>
-      <input class="form-input" id="receive" type="number" [formControl]="exchangeForm.controls.receive">
+      <div class="input-container">
+        <img *ngIf="selectedReceiveImage" [src]="selectedReceiveImage" class="input-icon" alt="Selected Receive Image">
+        <input class="form-input" id="receive" type="text" [formControl]="exchangeForm.controls.receive">
+      </div>
     </div>
   </form>
 

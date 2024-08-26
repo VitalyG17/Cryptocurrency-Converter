@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
 import {banksInformation} from '../../banksInformation';
@@ -12,6 +12,8 @@ import {CryptoService} from '../../services/crypto.service';
 })
 export class ListItemComponent implements OnInit, OnDestroy {
   @Input() isCrypto: boolean = true;
+
+  @Output() itemSelected: EventEmitter<any> = new EventEmitter<any>();
 
   protected cryptoList: AnswerCryptoGecko[] = [];
 
@@ -33,5 +35,9 @@ export class ListItemComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  protected onItemClick(item: any): void {
+    this.itemSelected.emit(item);
   }
 }
