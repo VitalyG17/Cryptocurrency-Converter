@@ -11,13 +11,17 @@ import {CryptoService} from '../../services/crypto.service';
   styleUrls: ['./list-item.component.scss'],
 })
 export class ListItemComponent implements OnInit, OnDestroy {
-  @Input() isCrypto: boolean = true;
+  @Input() public isCrypto: boolean = true;
 
-  @Output() itemSelected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() public itemSelected: EventEmitter<BankInfo | AnswerCryptoGecko> = new EventEmitter<
+    BankInfo | AnswerCryptoGecko
+  >();
 
   protected cryptoList: AnswerCryptoGecko[] = [];
 
   protected readonly banksInformation: BankInfo[] = banksInformation;
+
+  protected selectedItem: BankInfo | AnswerCryptoGecko | null = null;
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -38,6 +42,7 @@ export class ListItemComponent implements OnInit, OnDestroy {
   }
 
   protected onItemClick(item: any): void {
+    this.selectedItem = item;
     this.itemSelected.emit(item);
   }
 }

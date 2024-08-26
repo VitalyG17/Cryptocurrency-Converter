@@ -9,7 +9,12 @@
 
   &-item:hover {
     cursor: pointer;
-    background: #b0dd63;
+    background: rgba(176, 221, 99, 0.6);
+  }
+
+  &-item.active {
+    cursor: pointer;
+    background: rgba(176, 221, 99, 0.87);
   }
 }
 
