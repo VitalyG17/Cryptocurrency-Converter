@@ -21,19 +21,19 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   private readonly currencyService: CurrencyService = inject(CurrencyService);
-  private readonly exchangeService: ExchangeService = inject(ExchangeService);
-
-  protected currentValue: AnswerCurrency | null = null;
+  protected readonly exchangeService: ExchangeService = inject(ExchangeService);
 
   protected selectedGiveImage: string | null = null;
   protected selectedReceiveImage: string | null = null;
+
+  protected currentValue: AnswerCurrency | null = null;
 
   public readonly exchangeForm: FormGroup<IExchangeForm> = new FormGroup<IExchangeForm>({
     give: new FormControl(null),
     receive: new FormControl(null),
   });
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.currencyService
       .getCurrentExchangeRate('USD')
       .pipe(takeUntil(this.destroy$))
@@ -52,7 +52,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

@@ -10,28 +10,24 @@ import {BankInfo} from '../../types/bank-info';
   styleUrls: ['./send-receive.component.scss'],
 })
 export class SendReceiveComponent {
-  @Input() title: string | null = null;
+  @Input() public title: string | null = null;
 
-  @Input() isCrypto: boolean = false;
+  @Input() public isCrypto: boolean = false;
 
-  @Input() isGive: boolean = true;
+  @Input() public isGive: boolean = true;
 
   public selectedImage: string | null = null;
 
   private readonly exchangeService: ExchangeService = inject(ExchangeService);
 
-  public handleSwitch(option: PaymentOption): void {
+  protected handleSwitch(option: PaymentOption): void {
     this.isCrypto = option === PaymentOption.Crypto;
   }
 
-  public onItemSelected(item: AnswerCryptoGecko | BankInfo): void {
-    const image = item.image;
+  protected onItemSelected(item: AnswerCryptoGecko | BankInfo): void {
+    const image: string = item.image;
 
-    if (this.isGive) {
-      this.exchangeService.setGiveValue(item);
-    } else {
-      this.exchangeService.setReceiveValue(item);
-    }
+    this.isGive ? this.exchangeService.setGiveValue(item) : this.exchangeService.setReceiveValue(item);
     this.selectedImage = image;
   }
 }

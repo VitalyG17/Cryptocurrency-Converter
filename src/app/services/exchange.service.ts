@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {BankInfo} from '../types/bank-info';
 import {AnswerCryptoGecko} from '../types/cryptoServer-answer';
 
@@ -8,14 +8,22 @@ export class ExchangeService {
   private giveValueSubject: Subject<BankInfo | AnswerCryptoGecko> = new Subject<BankInfo | AnswerCryptoGecko>();
   private receiveValueSubject: Subject<BankInfo | AnswerCryptoGecko> = new Subject<BankInfo | AnswerCryptoGecko>();
 
-  giveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.giveValueSubject;
-  receiveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.receiveValueSubject;
+  public giveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.giveValueSubject;
+  public receiveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.receiveValueSubject;
 
-  setGiveValue(value: BankInfo | AnswerCryptoGecko) {
+  public selectedCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('USD');
+  public selectedCurrencyRate: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+
+  public setGiveValue(value: BankInfo | AnswerCryptoGecko): void {
     this.giveValueSubject.next(value);
   }
 
-  setReceiveValue(value: BankInfo | AnswerCryptoGecko) {
+  public setReceiveValue(value: BankInfo | AnswerCryptoGecko): void {
     this.receiveValueSubject.next(value);
+  }
+
+  public updateCurrency(currency: string, rate: number): void {
+    this.selectedCurrency.next(currency);
+    this.selectedCurrencyRate.next(rate);
   }
 }

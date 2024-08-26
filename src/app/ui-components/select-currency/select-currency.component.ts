@@ -1,6 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {CurrencyService} from '../../services/currency.service';
 import {AnswerCurrency} from '../../types/currencyServer-answer';
+import {ExchangeService} from '../../services/exchange.service';
 
 @Component({
   selector: 'app-select-currency',
@@ -8,7 +9,7 @@ import {AnswerCurrency} from '../../types/currencyServer-answer';
   styleUrls: ['./select-currency.component.scss'],
 })
 export class SelectCurrencyComponent implements OnInit {
-  @Input() isCrypto: boolean = false;
+  @Input() public isCrypto: boolean = false;
 
   protected hasError: boolean = false;
 
@@ -21,6 +22,8 @@ export class SelectCurrencyComponent implements OnInit {
   protected conversionRates: {[key: string]: number} = {};
 
   private readonly currencyService: CurrencyService = inject(CurrencyService);
+
+  private readonly exchangeService: ExchangeService = inject(ExchangeService);
 
   public ngOnInit(): void {
     this.currencyService.getCurrentExchangeRate('USD').subscribe((data: AnswerCurrency) => {
@@ -48,6 +51,6 @@ export class SelectCurrencyComponent implements OnInit {
 
   protected onCurrencySelect(curr: string): void {
     const rate: number = this.conversionRates[curr];
-    console.log(`Стоимость для ${curr}: ${rate}`);
+    this.exchangeService.updateCurrency(curr, rate);
   }
 }

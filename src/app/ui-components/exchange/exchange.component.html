@@ -12,7 +12,7 @@
       <label class="label first-label" for="give">Отдаете</label>
       <div class="input-container">
         <img *ngIf="selectedGiveImage" [src]="selectedGiveImage" class="input-icon" alt="Selected Give Image">
-        <input class="form-input" id="give" type="text" [formControl]="exchangeForm.controls.give">
+        <input class="form-input" id="give" type="number" [formControl]="exchangeForm.controls.give">
       </div>
     </div>
 
@@ -21,7 +21,7 @@
       <label class="label" for="receive">Получаете</label>
       <div class="input-container">
         <img *ngIf="selectedReceiveImage" [src]="selectedReceiveImage" class="input-icon" alt="Selected Receive Image">
-        <input class="form-input" id="receive" type="text" [formControl]="exchangeForm.controls.receive">
+        <input class="form-input" id="receive" type="number" [formControl]="exchangeForm.controls.receive">
       </div>
     </div>
   </form>
@@ -29,7 +29,13 @@
   <div class="exchange-rate">
     <span class="exchange-rate__title">Курс обмена</span>
     <span class="exchange-rate__current">
-  {{ currentValue?.conversion_rates?.['RUB'] ? (currentValue!.conversion_rates['RUB'].toPrecision(5) + ' RUB = 1 USD') : 'Загрузка...' }}
-</span>
+    <span *ngIf="(exchangeService.selectedCurrency.getValue() === 'USD')">
+            {{ currentValue?.conversion_rates?.['RUB'] ? (currentValue!.conversion_rates['RUB'].toPrecision(5) + ' RUB = 1 USD') : 'Загрузка...' }}
+    </span>
+    <span *ngIf="(exchangeService.selectedCurrency.getValue() !=='USD')">
+      {{ (1 / exchangeService.selectedCurrencyRate.getValue()).toPrecision(5) }}
+      RUB = 1 {{ exchangeService.selectedCurrency.getValue() }}
+    </span>
+  </span>
   </div>
 </div>
