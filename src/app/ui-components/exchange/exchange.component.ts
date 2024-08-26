@@ -56,4 +56,18 @@ export class ExchangeComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  protected changeFields(): void {
+    const giveValue: string | null = this.exchangeForm.controls.give.value;
+    const receiveValue: string | null = this.exchangeForm.controls.receive.value;
+
+    this.exchangeForm.patchValue({
+      give: receiveValue,
+      receive: giveValue,
+    });
+
+    const tempImage: string | null = this.selectedGiveImage;
+    this.selectedGiveImage = this.selectedReceiveImage;
+    this.selectedReceiveImage = tempImage;
+  }
 }
