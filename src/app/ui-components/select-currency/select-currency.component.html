@@ -6,7 +6,9 @@
   <ng-template #currencyContent>
     <ng-container *ngIf="isCrypto; else currencyList">
       <div class="example-button-row">
-        <button class="curr-button" mat-button>Криптовалюты</button>
+        <button class="curr-button" mat-button [ngClass]="{ 'active': selectedCrypto }">
+          Криптовалюты
+        </button>
       </div>
     </ng-container>
 
@@ -17,7 +19,8 @@
 
       <ng-container *ngFor="let curr of getPaginatedCurrency()">
         <div class="example-button-row">
-          <button class="curr-button" mat-button (click)="onCurrencySelect(curr)">
+          <button class="curr-button" mat-button (click)="onCurrencySelect(curr)"
+                  [ngClass]="{ 'active': curr === selectedCurrency }">
             {{ curr }}
           </button>
         </div>

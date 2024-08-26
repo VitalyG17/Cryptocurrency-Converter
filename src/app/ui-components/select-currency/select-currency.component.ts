@@ -21,12 +21,16 @@ export class SelectCurrencyComponent implements OnInit {
 
   protected conversionRates: {[key: string]: number} = {};
 
+  protected selectedCurrency: string = 'USD';
+
+  protected selectedCrypto: boolean = true;
+
   private readonly currencyService: CurrencyService = inject(CurrencyService);
 
   private readonly exchangeService: ExchangeService = inject(ExchangeService);
 
   public ngOnInit(): void {
-    this.currencyService.getCurrentExchangeRate('USD').subscribe((data: AnswerCurrency) => {
+    this.currencyService.getCurrentExchangeRate('RUB').subscribe((data: AnswerCurrency) => {
       if (data && data.conversion_rates && Object.keys(data.conversion_rates).length > 0) {
         this.conversionRates = data.conversion_rates;
         this.currency = Object.keys(this.conversionRates);
@@ -52,5 +56,6 @@ export class SelectCurrencyComponent implements OnInit {
   protected onCurrencySelect(curr: string): void {
     const rate: number = this.conversionRates[curr];
     this.exchangeService.updateCurrency(curr, rate);
+    this.selectedCurrency = curr;
   }
 }
