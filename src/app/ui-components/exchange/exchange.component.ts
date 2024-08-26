@@ -23,10 +23,11 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   private readonly currencyService: CurrencyService = inject(CurrencyService);
   protected readonly exchangeService: ExchangeService = inject(ExchangeService);
 
-  protected selectedGiveImage: string | null = null;
-  protected selectedReceiveImage: string | null = null;
+  protected selectedGiveImage: string = 'assets/none.svg';
+  protected selectedReceiveImage: string = 'assets/none.svg';
 
   protected currentValue: AnswerCurrency | null = null;
+  protected selectedCrypto: AnswerCryptoGecko | null = null;
 
   public readonly exchangeForm: FormGroup<IExchangeForm> = new FormGroup<IExchangeForm>({
     give: new FormControl(null),
@@ -43,12 +44,14 @@ export class ExchangeComponent implements OnInit, OnDestroy {
 
     this.exchangeService.giveValue$.pipe(takeUntil(this.destroy$)).subscribe((item: BankInfo | AnswerCryptoGecko) => {
       this.selectedGiveImage = item.image;
+      this.selectedCrypto = item as AnswerCryptoGecko;
     });
 
     this.exchangeService.receiveValue$
       .pipe(takeUntil(this.destroy$))
       .subscribe((item: BankInfo | AnswerCryptoGecko) => {
         this.selectedReceiveImage = item.image;
+        this.selectedCrypto = item as AnswerCryptoGecko;
       });
   }
 

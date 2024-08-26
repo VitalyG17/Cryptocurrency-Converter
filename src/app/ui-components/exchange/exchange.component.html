@@ -29,13 +29,20 @@
   <div class="exchange-rate">
     <span class="exchange-rate__title">Курс обмена</span>
     <span class="exchange-rate__current">
-    <span *ngIf="(exchangeService.selectedCurrency.getValue() === 'USD')">
-                  {{ currentValue?.conversion_rates?.['RUB'] ? (currentValue!.conversion_rates['RUB'].toPrecision(5) + ' RUB = 1 USD') : 'Загрузка...' }}
-          </span>
-          <span *ngIf="(exchangeService.selectedCurrency.getValue() !=='USD')">
-            {{ (1 / exchangeService.selectedCurrencyRate.getValue()).toPrecision(5) }}
-            RUB = 1 {{ exchangeService.selectedCurrency.getValue() }}
-          </span>
+      <span *ngIf="!selectedCrypto">
+        <span *ngIf="(exchangeService.selectedCurrency.getValue() === 'USD')">
+          {{ currentValue?.conversion_rates?.['RUB'] ? (currentValue!.conversion_rates['RUB'].toPrecision(5) + ' RUB = 1 USD') : 'Загрузка...' }}
+        </span>
+        <span *ngIf="(exchangeService.selectedCurrency.getValue() !=='USD')">
+          {{ (1 / exchangeService.selectedCurrencyRate.getValue()).toPrecision(5) }}
+          RUB = 1 {{ exchangeService.selectedCurrency.getValue() }}
+        </span>
+      </span>
+      <span *ngIf="selectedCrypto && currentValue && currentValue.conversion_rates">
+        1 {{ (selectedCrypto.symbol) | uppercase }}
+        = {{ (selectedCrypto.current_price * currentValue.conversion_rates[exchangeService.selectedCurrency.getValue()] || 0).toPrecision(5) }}
+        {{ exchangeService.selectedCurrency.getValue() }}
+      </span>
   </span>
   </div>
 </div>
