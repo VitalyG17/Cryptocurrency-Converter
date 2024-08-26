@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
 import {CurrencyService} from '../../services/currency.service';
 import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
@@ -7,6 +7,7 @@ import {ExchangeService} from '../../services/exchange.service';
   selector: 'app-select-currency',
   templateUrl: './select-currency.component.html',
   styleUrls: ['./select-currency.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectCurrencyComponent implements OnInit {
   @Input() public isCrypto: boolean = false;

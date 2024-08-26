@@ -1,13 +1,14 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 import {PaymentOption} from '../../types/paymentOption';
 
 @Component({
   selector: 'app-switch-button',
   templateUrl: './switch-button.component.html',
   styleUrls: ['./switch-button.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwitchButtonComponent {
-  @Output() switchOption: EventEmitter<PaymentOption> = new EventEmitter<PaymentOption>();
+  @Output() public switchOption: EventEmitter<PaymentOption> = new EventEmitter<PaymentOption>();
 
   protected readonly PaymentOption = PaymentOption;
 

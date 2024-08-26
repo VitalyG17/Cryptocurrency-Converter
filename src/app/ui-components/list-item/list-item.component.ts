@@ -1,4 +1,13 @@
-import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
 import {banksInformation} from '../../banksInformation';
@@ -9,6 +18,7 @@ import {CryptoService} from '../../services/crypto.service';
   selector: 'app-list-item',
   templateUrl: './list-item.component.html',
   styleUrls: ['./list-item.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListItemComponent implements OnInit, OnDestroy {
   @Input() public isCrypto: boolean = true;

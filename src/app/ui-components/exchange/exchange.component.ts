@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {CurrencyService} from '../../services/currency.service';
 import {Subject, takeUntil} from 'rxjs';
@@ -16,6 +16,7 @@ interface IExchangeForm {
   selector: 'app-exchange',
   templateUrl: './exchange.component.html',
   styleUrls: ['./exchange.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExchangeComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();

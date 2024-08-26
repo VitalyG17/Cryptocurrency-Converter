@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {PaymentOption} from '../../types/paymentOption';
 import {ExchangeService} from '../../services/exchange.service';
 import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
@@ -8,6 +8,7 @@ import {BankInfo} from '../../types/bank-info';
   selector: 'app-send-receive',
   templateUrl: './send-receive.component.html',
   styleUrls: ['./send-receive.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendReceiveComponent {
   @Input() public title: string | null = null;
