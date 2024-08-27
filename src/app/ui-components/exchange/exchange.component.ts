@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {CurrencyService} from '../../services/currency.service';
-import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap, takeUntil} from 'rxjs';
+import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap, takeUntil, tap} from 'rxjs';
 import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
 import {BankInfo} from '../../types/bank-info';
@@ -19,6 +19,8 @@ interface IExchangeForm {
 })
 export class ExchangeComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
+
+  private readonly changeButtonClick$: Subject<void> = new Subject<void>();
 
   private readonly currencyService: CurrencyService = inject(CurrencyService);
   protected readonly exchangeService: ExchangeService = inject(ExchangeService);
@@ -81,25 +83,13 @@ export class ExchangeComponent implements OnInit, OnDestroy {
           this.selectedCrypto = item as AnswerCryptoGecko;
         }
       });
+
+    this.changeButtonClick$.pipe(tap(() => this.changeFieldsForm())).subscribe();
   }
 
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  protected changeFields(): void {
-    const giveValue: string | null = this.exchangeForm.controls.give.value;
-    const receiveValue: string | null = this.exchangeForm.controls.receive.value;
-
-    this.exchangeForm.patchValue({
-      give: receiveValue,
-      receive: giveValue,
-    });
-
-    const tempImage: string | null = this.selectedGiveImage;
-    this.selectedGiveImage = this.selectedReceiveImage;
-    this.selectedReceiveImage = tempImage;
   }
 
   private calculateReceiveValue(giveValue: number): Observable<number> {
@@ -116,5 +106,20 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         return this.selectedCrypto ? of(receiveValue / this.selectedCrypto.current_price) : of(receiveValue / rate);
       }),
     );
+  }
+
+  protected onChangeButtonClick(): void {
+    this.changeButtonClick$.next();
+  }
+
+  private changeFieldsForm(): void {
+    const tempValue: string | null = this.exchangeForm.controls.give.value;
+    const tempImage: string = this.selectedGiveImage;
+
+    this.exchangeForm.controls.give.setValue(this.exchangeForm.controls.receive.value, {emitEvent: false});
+    this.exchangeForm.controls.receive.setValue(tempValue, {emitEvent: false});
+
+    this.selectedGiveImage = this.selectedReceiveImage;
+    this.selectedReceiveImage = tempImage;
   }
 }
