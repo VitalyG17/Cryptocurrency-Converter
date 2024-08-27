@@ -43,7 +43,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe((receiveValue: number) => {
-        this.exchangeForm.controls.receive.setValue(receiveValue.toString(), {emitEvent: false});
+        const roundedValue: string = receiveValue.toFixed(6);
+        this.exchangeForm.controls.receive.setValue(roundedValue, {emitEvent: false});
       });
 
     this.exchangeForm.controls.receive.valueChanges
@@ -54,7 +55,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe((giveValue: number) => {
-        this.exchangeForm.controls.give.setValue(giveValue.toString(), {emitEvent: false});
+        const roundedValue: string = giveValue.toFixed(6);
+        this.exchangeForm.controls.give.setValue(roundedValue, {emitEvent: false});
       });
 
     this.currencyService
@@ -102,23 +104,16 @@ export class ExchangeComponent implements OnInit, OnDestroy {
 
   private calculateReceiveValue(giveValue: number): Observable<number> {
     return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
-      switchMap(([rate]): Observable<number> => {
-        if (this.selectedCrypto) {
-          return of(giveValue * (this.selectedCrypto.current_price / rate));
-        }
-        return of(giveValue * rate);
+      switchMap(([rate]: [number]): Observable<number> => {
+        return this.selectedCrypto ? of(giveValue / this.selectedCrypto.current_price) : of(giveValue * rate);
       }),
     );
   }
 
   private calculateGiveValue(receiveValue: number): Observable<number> {
     return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
-      switchMap(([rate]): Observable<number> => {
-        if (this.selectedCrypto) {
-          return of((receiveValue / this.selectedCrypto.current_price) * rate);
-        } else {
-          return of(receiveValue / rate);
-        }
+      switchMap(([rate]: [number]): Observable<number> => {
+        return this.selectedCrypto ? of(receiveValue / this.selectedCrypto.current_price) : of(receiveValue / rate);
       }),
     );
   }
