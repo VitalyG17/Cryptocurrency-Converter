@@ -66,14 +66,18 @@ export class ExchangeComponent implements OnInit, OnDestroy {
 
     this.exchangeService.giveValue$.pipe(takeUntil(this.destroy$)).subscribe((item: BankInfo | AnswerCryptoGecko) => {
       this.selectedGiveImage = item.image;
-      this.selectedCrypto = item as AnswerCryptoGecko;
+      if ('current_price' in item) {
+        this.selectedCrypto = item as AnswerCryptoGecko;
+      }
     });
 
     this.exchangeService.receiveValue$
       .pipe(takeUntil(this.destroy$))
       .subscribe((item: BankInfo | AnswerCryptoGecko) => {
         this.selectedReceiveImage = item.image;
-        this.selectedCrypto = item as AnswerCryptoGecko;
+        if ('current_price' in item) {
+          this.selectedCrypto = item as AnswerCryptoGecko;
+        }
       });
   }
 
