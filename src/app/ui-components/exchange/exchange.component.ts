@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {CurrencyService} from '../../services/currency.service';
-import {Subject, takeUntil} from 'rxjs';
+import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap, takeUntil} from 'rxjs';
 import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
 import {BankInfo} from '../../types/bank-info';
@@ -16,7 +16,6 @@ interface IExchangeForm {
   selector: 'app-exchange',
   templateUrl: './exchange.component.html',
   styleUrls: ['./exchange.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExchangeComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
@@ -36,6 +35,28 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   });
 
   public ngOnInit(): void {
+    this.exchangeForm.controls.give.valueChanges
+      .pipe(
+        filter((value: string | null) => !!value),
+        debounceTime(300),
+        switchMap((value: string | null) => this.calculateReceiveValue(Number(value))),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((receiveValue: number) => {
+        this.exchangeForm.controls.receive.setValue(receiveValue.toString(), {emitEvent: false});
+      });
+
+    this.exchangeForm.controls.receive.valueChanges
+      .pipe(
+        filter((value: string | null) => !!value),
+        debounceTime(300),
+        switchMap((value: string | null) => this.calculateGiveValue(Number(value))),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((giveValue: number) => {
+        this.exchangeForm.controls.give.setValue(giveValue.toString(), {emitEvent: false});
+      });
+
     this.currencyService
       .getCurrentExchangeRate('USD')
       .pipe(takeUntil(this.destroy$))
@@ -73,5 +94,28 @@ export class ExchangeComponent implements OnInit, OnDestroy {
     const tempImage: string | null = this.selectedGiveImage;
     this.selectedGiveImage = this.selectedReceiveImage;
     this.selectedReceiveImage = tempImage;
+  }
+
+  private calculateReceiveValue(giveValue: number): Observable<number> {
+    return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
+      switchMap(([rate]): Observable<number> => {
+        if (this.selectedCrypto) {
+          return of(giveValue * (this.selectedCrypto.current_price / rate));
+        }
+        return of(giveValue * rate);
+      }),
+    );
+  }
+
+  private calculateGiveValue(receiveValue: number): Observable<number> {
+    return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
+      switchMap(([rate]): Observable<number> => {
+        if (this.selectedCrypto) {
+          return of((receiveValue / this.selectedCrypto.current_price) * rate);
+        } else {
+          return of(receiveValue / rate);
+        }
+      }),
+    );
   }
 }
