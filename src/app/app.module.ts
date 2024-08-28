@@ -23,8 +23,8 @@ import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.ser
 import {SendReceiveComponent} from './ui-components/send-receive/send-receive.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {ExchangeService} from './services/exchange.service';
-import {ListItemUiComponent} from './ui-components/list-item-ui/list-item-ui.component';
-import {ListItemBusinessComponent} from './ui-components/list-item-business/list-item-business.component';
+import {ListItemUiComponent} from './ui-components/list-item/list-item-ui/list-item-ui.component';
+import {ListItemBusinessComponent} from './ui-components/list-item/list-item-business/list-item-business.component';
 
 @NgModule({
   declarations: [

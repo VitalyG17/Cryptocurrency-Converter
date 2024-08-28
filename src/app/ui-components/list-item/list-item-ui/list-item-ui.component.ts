@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BankInfo} from '../../types/bank-info';
-import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
+import {BankInfo} from '../../../types/bank-info';
+import {AnswerCryptoGecko} from '../../../types/cryptoServer-answer';
 
 @Component({
   selector: 'app-list-item-ui',

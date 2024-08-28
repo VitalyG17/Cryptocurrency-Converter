@@ -1,9 +1,9 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {BankInfo} from '../../types/bank-info';
-import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
+import {BankInfo} from '../../../types/bank-info';
+import {AnswerCryptoGecko} from '../../../types/cryptoServer-answer';
 import {Subject, takeUntil} from 'rxjs';
-import {CryptoService} from '../../services/crypto.service';
-import {banksInformation} from '../../banksInformation';
+import {CryptoService} from '../../../services/crypto.service';
+import {banksInformation} from '../../../banksInformation';
 
 @Component({
   selector: 'app-list-item-business',
