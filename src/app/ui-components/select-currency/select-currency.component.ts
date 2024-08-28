@@ -1,13 +1,14 @@
-import {ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, Input, OnInit} from '@angular/core';
 import {CurrencyService} from '../../services/currency.service';
 import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
+import {ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   selector: 'app-select-currency',
   templateUrl: './select-currency.component.html',
   styleUrls: ['./select-currency.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectCurrencyComponent implements OnInit {
   @Input() public isCrypto: boolean = false;
@@ -30,6 +31,8 @@ export class SelectCurrencyComponent implements OnInit {
 
   private readonly exchangeService: ExchangeService = inject(ExchangeService);
 
+  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   public ngOnInit(): void {
     this.currencyService.getCurrentExchangeRate('RUB').subscribe((data: AnswerCurrency) => {
       if (data && data.conversion_rates && Object.keys(data.conversion_rates).length > 0) {
@@ -39,6 +42,7 @@ export class SelectCurrencyComponent implements OnInit {
       } else {
         this.hasError = true;
       }
+      this.cdr.markForCheck();
     });
   }
 

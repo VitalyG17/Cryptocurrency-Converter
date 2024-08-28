@@ -1,4 +1,13 @@
-import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {BankInfo} from '../../../types/bank-info';
 import {AnswerCryptoGecko} from '../../../types/cryptoServer-answer';
 import {Subject, takeUntil} from 'rxjs';
@@ -9,15 +18,17 @@ import {banksInformation} from '../../../banksInformation';
   selector: 'app-list-item-business',
   templateUrl: './list-item-business.component.html',
   styleUrls: ['./list-item-business.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListItemBusinessComponent implements OnInit, OnDestroy {
   @Input() public isCrypto: boolean = true;
+
+  @Input() public cryptoList: AnswerCryptoGecko[] = [];
 
   @Output() public itemSelected: EventEmitter<BankInfo | AnswerCryptoGecko> = new EventEmitter<
     BankInfo | AnswerCryptoGecko
   >();
 
-  protected cryptoList: AnswerCryptoGecko[] = [];
   protected readonly banksInformation: BankInfo[] = banksInformation;
 
   private destroy$: Subject<void> = new Subject<void>();

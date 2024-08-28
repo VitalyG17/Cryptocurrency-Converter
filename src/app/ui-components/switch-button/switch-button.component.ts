@@ -5,7 +5,7 @@ import {PaymentOption} from '../../types/paymentOption';
   selector: 'app-switch-button',
   templateUrl: './switch-button.component.html',
   styleUrls: ['./switch-button.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwitchButtonComponent implements OnInit {
   @Input() public isCrypto: boolean = true;

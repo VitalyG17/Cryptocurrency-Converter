@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {BankInfo} from '../../../types/bank-info';
 import {AnswerCryptoGecko, isAnswerCryptoGecko} from '../../../types/cryptoServer-answer';
 
@@ -6,6 +6,7 @@ import {AnswerCryptoGecko, isAnswerCryptoGecko} from '../../../types/cryptoServe
   selector: 'app-list-item-ui',
   templateUrl: './list-item-ui.component.html',
   styleUrls: ['./list-item-ui.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListItemUiComponent {
   @Input() public items: BankInfo[] | AnswerCryptoGecko[] = [];

@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {CurrencyService} from '../../services/currency.service';
 import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap, takeUntil, tap} from 'rxjs';
@@ -16,12 +16,14 @@ interface IExchangeForm {
   selector: 'app-exchange',
   templateUrl: './exchange.component.html',
   styleUrls: ['./exchange.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExchangeComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   private readonly changeButtonClick$: Subject<void> = new Subject<void>();
 
+  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly currencyService: CurrencyService = inject(CurrencyService);
   protected readonly exchangeService: ExchangeService = inject(ExchangeService);
 
@@ -73,6 +75,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       if (isAnswerCryptoGecko(item)) {
         this.selectedCrypto = item;
       }
+      this.cdr.markForCheck();
     });
 
     this.exchangeService.receiveValue$
@@ -82,7 +85,12 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         if (isAnswerCryptoGecko(item)) {
           this.selectedCrypto = item;
         }
+        this.cdr.markForCheck();
       });
+
+    this.exchangeService.selectedCurrency.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.cdr.markForCheck();
+    });
 
     this.changeButtonClick$.pipe(tap(() => this.changeFieldsForm())).subscribe();
   }
