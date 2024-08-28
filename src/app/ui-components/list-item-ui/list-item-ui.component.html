@@ -1,15 +1,16 @@
 <mat-list class="list" *ngIf="isCrypto; else banksList">
-  <mat-list-item *ngFor="let crypto of cryptoList" class="list-item" [ngClass]="{ active: selectedItem === crypto }"
+  <mat-list-item *ngFor="let crypto of items" class="list-item" [ngClass]="{ active: selectedItem === crypto }"
                  (click)="onItemClick(crypto)">
     <img class="img-circle" matListItemIcon src="{{ crypto.image }}" alt="{{ crypto.name }}">
-    <h3 matListItemTitle>{{ crypto.name }} {{ crypto.symbol }} </h3>
-    <span>{{ (crypto.current_price).toString() | usdTransform }}</span>
+    <h3 matListItemTitle>{{ crypto.name }}
+      <span *ngIf="checkCrypto(crypto)">{{ crypto.symbol }}</span></h3>
+    <span *ngIf="checkCrypto(crypto)">{{ (crypto.current_price).toString() | usdTransform }}</span>
   </mat-list-item>
 </mat-list>
 
 <ng-template #banksList>
   <mat-list class="list">
-    <mat-list-item *ngFor="let bank of banksInformation" class="list-item" [ngClass]="{ active: selectedItem === bank }"
+    <mat-list-item *ngFor="let bank of items" class="list-item" [ngClass]="{ active: selectedItem === bank }"
                    (click)="onItemClick(bank)">
       <img class="img-circle" matListItemIcon src="{{ bank.image }}" alt="{{ bank.name }}">
       <h3 matListItemTitle>{{ bank.name }}</h3>

@@ -15,7 +15,6 @@ import {MainPageComponent} from './pages/main-page/main-page.component';
 import {ExchangeComponent} from './ui-components/exchange/exchange.component';
 import {SwitchButtonComponent} from './ui-components/switch-button/switch-button.component';
 import {SelectCurrencyComponent} from './ui-components/select-currency/select-currency.component';
-import {ListItemComponent} from './ui-components/list-item/list-item.component';
 import {MatInputModule} from '@angular/material/input';
 import {UsdTransformPipe} from './pipes/usd-transform.pipe';
 import {CurrencyService} from './services/currency.service';
@@ -24,6 +23,8 @@ import {CoinGeckoInterceptorService} from './services/coin-gecko.interceptor.ser
 import {SendReceiveComponent} from './ui-components/send-receive/send-receive.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {ExchangeService} from './services/exchange.service';
+import {ListItemUiComponent} from './ui-components/list-item-ui/list-item-ui.component';
+import {ListItemBusinessComponent} from './ui-components/list-item-business/list-item-business.component';
 
 @NgModule({
   declarations: [
@@ -32,9 +33,10 @@ import {ExchangeService} from './services/exchange.service';
     ExchangeComponent,
     SwitchButtonComponent,
     SelectCurrencyComponent,
-    ListItemComponent,
     UsdTransformPipe,
     SendReceiveComponent,
+    ListItemUiComponent,
+    ListItemBusinessComponent,
   ],
   imports: [
     BrowserModule,
