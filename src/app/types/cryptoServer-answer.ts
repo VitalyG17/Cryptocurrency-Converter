@@ -1,3 +1,5 @@
+import {BankInfo} from './bank-info';
+
 export class AnswerCryptoGecko {
   public id: string;
   public symbol: string;
@@ -12,4 +14,15 @@ export class AnswerCryptoGecko {
     this.image = image;
     this.current_price = current_price;
   }
+}
+
+export function isAnswerCryptoGecko(item: BankInfo | AnswerCryptoGecko): item is AnswerCryptoGecko {
+  return (
+    'id' in item &&
+    'symbol' in item &&
+    'name' in item &&
+    'image' in item &&
+    'current_price' in item &&
+    typeof item.current_price === 'number'
+  );
 }

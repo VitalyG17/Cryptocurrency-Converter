@@ -5,15 +5,11 @@ import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap,
 import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
 import {BankInfo} from '../../types/bank-info';
-import {AnswerCryptoGecko} from '../../types/cryptoServer-answer';
+import {AnswerCryptoGecko, isAnswerCryptoGecko} from '../../types/cryptoServer-answer';
 
 interface IExchangeForm {
   give: FormControl<string | null>;
   receive: FormControl<string | null>;
-}
-
-function isAnswerCryptoGecko(item: BankInfo | AnswerCryptoGecko): item is AnswerCryptoGecko {
-  return 'current_price' in item;
 }
 
 @Component({
