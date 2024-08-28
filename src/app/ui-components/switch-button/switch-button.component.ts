@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentOption} from '../../types/paymentOption';
 
 @Component({
@@ -7,12 +7,18 @@ import {PaymentOption} from '../../types/paymentOption';
   styleUrls: ['./switch-button.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwitchButtonComponent {
+export class SwitchButtonComponent implements OnInit {
+  @Input() public isCrypto: boolean = true;
+
   @Output() public switchOption: EventEmitter<PaymentOption> = new EventEmitter<PaymentOption>();
 
   protected readonly PaymentOption = PaymentOption;
 
   protected selectedOption: PaymentOption | null = null;
+
+  public ngOnInit(): void {
+    this.selectedOption = this.isCrypto ? PaymentOption.Crypto : PaymentOption.Currency;
+  }
 
   protected selectOption(option: PaymentOption): void {
     this.selectedOption = option;

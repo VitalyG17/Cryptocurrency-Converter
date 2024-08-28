@@ -30,8 +30,9 @@
     <span class="exchange-rate__title">Курс обмена</span>
     <span class="exchange-rate__current">
       <span *ngIf="selectedCrypto; else currencyRate">
+<!--Нужно умножить на rate между валютой и криптой-->
         1 {{ (selectedCrypto.symbol) | uppercase }}
-        = {{ (selectedCrypto.current_price * currentValue!.conversion_rates[exchangeService.selectedCurrency.getValue()] || 0).toPrecision(5) }}
+        = {{ selectedCrypto.current_price * exchangeService.selectedCurrencyRate.getValue() }}
         {{ exchangeService.selectedCurrency.getValue() }}
       </span>
       <ng-template #currencyRate>

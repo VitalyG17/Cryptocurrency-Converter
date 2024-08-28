@@ -22,7 +22,7 @@ export class SelectCurrencyComponent implements OnInit {
 
   protected conversionRates: {[key: string]: number} = {};
 
-  protected selectedCurrency: string = 'USD';
+  protected selectedCurrency: string = 'RUB';
 
   protected selectedCrypto: boolean = true;
 

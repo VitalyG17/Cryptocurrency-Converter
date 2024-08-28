@@ -12,6 +12,10 @@ interface IExchangeForm {
   receive: FormControl<string | null>;
 }
 
+function isAnswerCryptoGecko(item: BankInfo | AnswerCryptoGecko): item is AnswerCryptoGecko {
+  return 'current_price' in item;
+}
+
 @Component({
   selector: 'app-exchange',
   templateUrl: './exchange.component.html',
@@ -62,7 +66,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       });
 
     this.currencyService
-      .getCurrentExchangeRate('USD')
+      .getCurrentExchangeRate('RUB')
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: AnswerCurrency) => {
         this.currentValue = data;
@@ -70,8 +74,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
 
     this.exchangeService.giveValue$.pipe(takeUntil(this.destroy$)).subscribe((item: BankInfo | AnswerCryptoGecko) => {
       this.selectedGiveImage = item.image;
-      if ('current_price' in item) {
-        this.selectedCrypto = item as AnswerCryptoGecko;
+      if (isAnswerCryptoGecko(item)) {
+        this.selectedCrypto = item;
       }
     });
 
@@ -79,8 +83,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((item: BankInfo | AnswerCryptoGecko) => {
         this.selectedReceiveImage = item.image;
-        if ('current_price' in item) {
-          this.selectedCrypto = item as AnswerCryptoGecko;
+        if (isAnswerCryptoGecko(item)) {
+          this.selectedCrypto = item;
         }
       });
 
@@ -95,6 +99,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   private calculateReceiveValue(giveValue: number): Observable<number> {
     return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
       switchMap(([rate]: [number]): Observable<number> => {
+        console.log('Rate:', rate);
+        console.log('GetValue:', this.exchangeService.selectedCurrencyRate.getValue());
         return this.selectedCrypto ? of(giveValue / this.selectedCrypto.current_price) : of(giveValue * rate);
       }),
     );

@@ -11,7 +11,7 @@ export class ExchangeService {
   public giveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.giveValueSubject;
   public receiveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.receiveValueSubject;
 
-  public selectedCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('USD');
+  public selectedCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('RUB');
   public selectedCurrencyRate: BehaviorSubject<number> = new BehaviorSubject<number>(1);
 
   public setGiveValue(value: BankInfo | AnswerCryptoGecko): void {

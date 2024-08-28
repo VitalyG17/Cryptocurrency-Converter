@@ -2,6 +2,7 @@
   <span class="title">{{ title }}</span>
   <div class="switch-wrapper">
     <app-switch-button
+      [isCrypto]="isCrypto"
       (switchOption)="handleSwitch($event)"
     ></app-switch-button>
   </div>
