@@ -1,18 +1,25 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {BankInfo} from '../types/bank-info';
 import {AnswerCryptoGecko} from '../types/cryptoServer-answer';
 
 @Injectable()
 export class ExchangeService {
-  private giveValueSubject: Subject<BankInfo | AnswerCryptoGecko> = new Subject<BankInfo | AnswerCryptoGecko>();
-  private receiveValueSubject: Subject<BankInfo | AnswerCryptoGecko> = new Subject<BankInfo | AnswerCryptoGecko>();
+  private giveValueSubject: BehaviorSubject<BankInfo | AnswerCryptoGecko | null> = new BehaviorSubject<
+    BankInfo | AnswerCryptoGecko | null
+  >(null);
+  private receiveValueSubject: BehaviorSubject<BankInfo | AnswerCryptoGecko | null> = new BehaviorSubject<
+    BankInfo | AnswerCryptoGecko | null
+  >(null);
 
-  public giveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.giveValueSubject;
-  public receiveValue$: Observable<BankInfo | AnswerCryptoGecko> = this.receiveValueSubject;
+  public giveValue$: Observable<BankInfo | AnswerCryptoGecko | null> = this.giveValueSubject;
+  public receiveValue$: Observable<BankInfo | AnswerCryptoGecko | null> = this.receiveValueSubject;
 
-  public selectedCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('RUB');
-  public selectedCurrencyRate: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  public selectedGiveCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('RUB');
+  public selectedReceiveCurrency: BehaviorSubject<string> = new BehaviorSubject<string>('RUB');
+
+  public selectedGiveCurrencyRate: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  public selectedReceiveCurrencyRate: BehaviorSubject<number> = new BehaviorSubject<number>(1);
 
   public setGiveValue(value: BankInfo | AnswerCryptoGecko): void {
     this.giveValueSubject.next(value);
@@ -22,8 +29,13 @@ export class ExchangeService {
     this.receiveValueSubject.next(value);
   }
 
-  public updateCurrency(currency: string, rate: number): void {
-    this.selectedCurrency.next(currency);
-    this.selectedCurrencyRate.next(rate);
+  public updateGiveCurrency(currency: string, rate: number): void {
+    this.selectedGiveCurrency.next(currency);
+    this.selectedGiveCurrencyRate.next(rate);
+  }
+
+  public updateReceiveCurrency(currency: string, rate: number): void {
+    this.selectedReceiveCurrency.next(currency);
+    this.selectedReceiveCurrencyRate.next(rate);
   }
 }

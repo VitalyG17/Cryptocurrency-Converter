@@ -13,6 +13,8 @@ import {ChangeDetectionStrategy} from '@angular/core';
 export class SelectCurrencyComponent implements OnInit {
   @Input() public isCrypto: boolean = false;
 
+  @Input() public isGiveCurrency: boolean = true;
+
   protected hasError: boolean = false;
 
   protected currency: string[] = [];
@@ -60,7 +62,11 @@ export class SelectCurrencyComponent implements OnInit {
 
   protected onCurrencySelect(curr: string): void {
     const rate: number = this.conversionRates[curr];
-    this.exchangeService.updateCurrency(curr, rate);
+    if (this.isGiveCurrency) {
+      this.exchangeService.updateGiveCurrency(curr, rate);
+    } else {
+      this.exchangeService.updateReceiveCurrency(curr, rate);
+    }
     this.selectedCurrency = curr;
   }
 }

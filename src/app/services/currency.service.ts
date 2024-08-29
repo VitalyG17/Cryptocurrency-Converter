@@ -5,7 +5,7 @@ import {AnswerCurrency} from '../types/currencyServer-answer';
 
 @Injectable()
 export class CurrencyService {
-  private readonly API_KEY: string = 'a681477969060a972e1543d6';
+  private readonly API_KEY: string = '360f4fab6cc51c926b5b8eaf';
 
   private readonly baseApiUrl: string = 'https://v6.exchangerate-api.com/v6';
 

@@ -1,8 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {CurrencyService} from '../../services/currency.service';
 import {combineLatest, debounceTime, filter, Observable, of, Subject, switchMap, takeUntil, tap} from 'rxjs';
-import {AnswerCurrency} from '../../types/currencyServer-answer';
 import {ExchangeService} from '../../services/exchange.service';
 import {BankInfo} from '../../types/bank-info';
 import {AnswerCryptoGecko, isAnswerCryptoGecko} from '../../types/cryptoServer-answer';
@@ -24,13 +22,12 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   private readonly changeButtonClick$: Subject<void> = new Subject<void>();
 
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private readonly currencyService: CurrencyService = inject(CurrencyService);
+
   protected readonly exchangeService: ExchangeService = inject(ExchangeService);
 
   protected selectedGiveImage: string = 'assets/none.svg';
   protected selectedReceiveImage: string = 'assets/none.svg';
 
-  protected currentValue: AnswerCurrency | null = null;
   protected selectedCrypto: AnswerCryptoGecko | null = null;
 
   public readonly exchangeForm: FormGroup<IExchangeForm> = new FormGroup<IExchangeForm>({
@@ -63,32 +60,39 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         this.exchangeForm.controls.give.setValue(roundedValue, {emitEvent: false});
       });
 
-    this.currencyService
-      .getCurrentExchangeRate('RUB')
+    this.exchangeService.giveValue$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: AnswerCurrency) => {
-        this.currentValue = data;
-      });
-
-    this.exchangeService.giveValue$.pipe(takeUntil(this.destroy$)).subscribe((item: BankInfo | AnswerCryptoGecko) => {
-      this.selectedGiveImage = item.image;
-      if (isAnswerCryptoGecko(item)) {
-        this.selectedCrypto = item;
-      }
-      this.cdr.markForCheck();
-    });
-
-    this.exchangeService.receiveValue$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((item: BankInfo | AnswerCryptoGecko) => {
-        this.selectedReceiveImage = item.image;
-        if (isAnswerCryptoGecko(item)) {
-          this.selectedCrypto = item;
+      .subscribe((item: BankInfo | AnswerCryptoGecko | null) => {
+        if (item) {
+          this.selectedGiveImage = item.image;
+          if (isAnswerCryptoGecko(item)) {
+            this.selectedCrypto = item;
+          }
         }
+        this.recalculateValues();
         this.cdr.markForCheck();
       });
 
-    this.exchangeService.selectedCurrency.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    this.exchangeService.receiveValue$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((item: BankInfo | AnswerCryptoGecko | null) => {
+        if (item) {
+          this.selectedReceiveImage = item.image;
+          if (isAnswerCryptoGecko(item)) {
+            this.selectedCrypto = item;
+          }
+        }
+        this.recalculateValues();
+        this.cdr.markForCheck();
+      });
+
+    this.exchangeService.selectedGiveCurrency.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.recalculateValues();
+      this.cdr.markForCheck();
+    });
+
+    this.exchangeService.selectedReceiveCurrency.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.recalculateValues();
       this.cdr.markForCheck();
     });
 
@@ -100,26 +104,53 @@ export class ExchangeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  protected onChangeButtonClick(): void {
+    this.changeButtonClick$.next();
+  }
+
+  private recalculateValues(): void {
+    const giveValue: string | null = this.exchangeForm.controls.give.value;
+    const receiveValue: string | null = this.exchangeForm.controls.receive.value;
+
+    if (giveValue) {
+      this.calculateReceiveValue(Number(giveValue)).subscribe((newReceiveValue: number) => {
+        this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
+      });
+    } else if (receiveValue) {
+      this.calculateGiveValue(Number(receiveValue)).subscribe((newGiveValue: number) => {
+        this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
+      });
+    }
+  }
+
   private calculateReceiveValue(giveValue: number): Observable<number> {
-    return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
-      switchMap(([rate]: [number]): Observable<number> => {
-        console.log('Rate:', rate);
-        console.log('GetValue:', this.exchangeService.selectedCurrencyRate.getValue());
-        return this.selectedCrypto ? of(giveValue / this.selectedCrypto.current_price) : of(giveValue * rate);
+    return combineLatest([
+      this.exchangeService.selectedGiveCurrencyRate,
+      this.exchangeService.selectedReceiveCurrencyRate,
+    ]).pipe(
+      switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
+        if (this.selectedCrypto) {
+          return of(giveValue / this.selectedCrypto.current_price);
+        } else {
+          return of(giveValue * (receiveRate / giveRate));
+        }
       }),
     );
   }
 
   private calculateGiveValue(receiveValue: number): Observable<number> {
-    return combineLatest([this.exchangeService.selectedCurrencyRate]).pipe(
-      switchMap(([rate]: [number]): Observable<number> => {
-        return this.selectedCrypto ? of(receiveValue / this.selectedCrypto.current_price) : of(receiveValue / rate);
+    return combineLatest([
+      this.exchangeService.selectedGiveCurrencyRate,
+      this.exchangeService.selectedReceiveCurrencyRate,
+    ]).pipe(
+      switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
+        if (this.selectedCrypto) {
+          return of(receiveValue * this.selectedCrypto.current_price);
+        } else {
+          return of(receiveValue * (giveRate / receiveRate));
+        }
       }),
     );
-  }
-
-  protected onChangeButtonClick(): void {
-    this.changeButtonClick$.next();
   }
 
   private changeFieldsForm(): void {
