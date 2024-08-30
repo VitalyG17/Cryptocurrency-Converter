@@ -1,19 +1,11 @@
-<mat-list class="list" *ngIf="isCrypto; else banksList">
-  <mat-list-item *ngFor="let crypto of items" class="list-item" [ngClass]="{ active: selectedItem === crypto }"
-                 (click)="onItemClick(crypto)">
-    <img class="img-circle" matListItemIcon src="{{ crypto.image }}" alt="{{ crypto.name }}">
-    <h3 matListItemTitle>{{ crypto.name }}
-      <span *ngIf="isAnswerCryptoGecko(crypto)">{{ crypto.symbol }}</span></h3>
-    <span *ngIf="isAnswerCryptoGecko(crypto)">{{ (crypto.current_price).toString() | usdTransform }}</span>
+<mat-list class="list">
+  <mat-list-item *ngFor="let item of items" class="list-item"
+                 [class.active]="item === activeItem"
+                 (click)="onItemClick(item)">
+    <img class="img-circle" matListItemIcon [src]="item.image" [alt]="item.name">
+    <h3 matListItemTitle>{{ item.name }}
+      <span *ngIf="isAnswerCryptoGecko(item)">{{ item.symbol }}</span>
+    </h3>
+    <span *ngIf="isAnswerCryptoGecko(item)">{{ (item.current_price).toString() | usdTransform }}</span>
   </mat-list-item>
 </mat-list>
-
-<ng-template #banksList>
-  <mat-list class="list">
-    <mat-list-item *ngFor="let bank of items" class="list-item" [ngClass]="{ active: selectedItem === bank }"
-                   (click)="onItemClick(bank)">
-      <img class="img-circle" matListItemIcon src="{{ bank.image }}" alt="{{ bank.name }}">
-      <h3 matListItemTitle>{{ bank.name }}</h3>
-    </mat-list-item>
-  </mat-list>
-</ng-template>

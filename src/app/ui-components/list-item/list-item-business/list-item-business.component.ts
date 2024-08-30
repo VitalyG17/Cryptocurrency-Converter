@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   inject,
@@ -29,11 +30,13 @@ export class ListItemBusinessComponent implements OnInit, OnDestroy {
     BankInfo | AnswerCryptoGecko
   >();
 
-  protected readonly banksInformation: BankInfo[] = banksInformation;
+  public bankList: BankInfo[] = banksInformation;
 
   private destroy$: Subject<void> = new Subject<void>();
 
   private readonly cryptoServiceGecko: CryptoService = inject(CryptoService);
+
+  private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   public ngOnInit(): void {
     this.cryptoServiceGecko
@@ -41,6 +44,7 @@ export class ListItemBusinessComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: AnswerCryptoGecko[]) => {
         this.cryptoList = data;
+        this.changeDetectorRef.detectChanges();
       });
   }
 

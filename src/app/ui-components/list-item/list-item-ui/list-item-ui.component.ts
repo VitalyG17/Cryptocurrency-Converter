@@ -10,17 +10,19 @@ import {AnswerCryptoGecko, isAnswerCryptoGecko} from '../../../types/cryptoServe
 })
 export class ListItemUiComponent {
   @Input() public items: BankInfo[] | AnswerCryptoGecko[] = [];
+
   @Input() public isCrypto: boolean = true;
+
   @Output() public itemSelected: EventEmitter<BankInfo | AnswerCryptoGecko> = new EventEmitter<
     BankInfo | AnswerCryptoGecko
   >();
 
-  protected selectedItem: BankInfo | AnswerCryptoGecko | null = null;
-
   protected readonly isAnswerCryptoGecko = isAnswerCryptoGecko;
 
+  protected activeItem: BankInfo | AnswerCryptoGecko | null = null;
+
   protected onItemClick(item: BankInfo | AnswerCryptoGecko): void {
-    this.selectedItem = item;
+    this.activeItem = item;
     this.itemSelected.emit(item);
   }
 }

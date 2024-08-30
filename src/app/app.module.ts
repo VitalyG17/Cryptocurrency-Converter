@@ -25,6 +25,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {ExchangeService} from './services/exchange.service';
 import {ListItemUiComponent} from './ui-components/list-item/list-item-ui/list-item-ui.component';
 import {ListItemBusinessComponent} from './ui-components/list-item/list-item-business/list-item-business.component';
+import {ActiveItemDirective} from './directives/active-item.directive';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {ListItemBusinessComponent} from './ui-components/list-item/list-item-bus
     SendReceiveComponent,
     ListItemUiComponent,
     ListItemBusinessComponent,
+    ActiveItemDirective,
   ],
   imports: [
     BrowserModule,
