@@ -28,7 +28,8 @@ export class ExchangeComponent implements OnInit, OnDestroy {
   protected selectedGiveImage: string = 'assets/none.svg';
   protected selectedReceiveImage: string = 'assets/none.svg';
 
-  protected selectedCrypto: AnswerCryptoGecko | null = null;
+  protected selectedGiveCrypto: AnswerCryptoGecko | null = null;
+  protected selectedReceiveCrypto: AnswerCryptoGecko | null = null;
 
   public readonly exchangeForm: FormGroup<IExchangeForm> = new FormGroup<IExchangeForm>({
     give: new FormControl(null),
@@ -40,7 +41,13 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .pipe(
         filter((value: string | null) => !!value),
         debounceTime(300),
-        switchMap((value: string | null) => this.calculateReceiveValue(Number(value))),
+        switchMap((value: string | null) => {
+          if (this.selectedGiveCrypto) {
+            return this.calculateReceiveValueCrypto(Number(value));
+          } else {
+            return this.calculateReceiveValue(Number(value));
+          }
+        }),
         takeUntil(this.destroy$),
       )
       .subscribe((receiveValue: number) => {
@@ -52,7 +59,13 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .pipe(
         filter((value: string | null) => !!value),
         debounceTime(300),
-        switchMap((value: string | null) => this.calculateGiveValue(Number(value))),
+        switchMap((value: string | null) => {
+          if (this.selectedReceiveCrypto) {
+            return this.calculateGiveValueCrypto(Number(value));
+          } else {
+            return this.calculateGiveValue(Number(value));
+          }
+        }),
         takeUntil(this.destroy$),
       )
       .subscribe((giveValue: number) => {
@@ -66,7 +79,9 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         if (item) {
           this.selectedGiveImage = item.image;
           if (isAnswerCryptoGecko(item)) {
-            this.selectedCrypto = item;
+            this.selectedGiveCrypto = item;
+          } else {
+            this.selectedGiveCrypto = null;
           }
         }
         this.recalculateValues();
@@ -79,7 +94,9 @@ export class ExchangeComponent implements OnInit, OnDestroy {
         if (item) {
           this.selectedReceiveImage = item.image;
           if (isAnswerCryptoGecko(item)) {
-            this.selectedCrypto = item;
+            this.selectedReceiveCrypto = item;
+          } else {
+            this.selectedReceiveCrypto = null;
           }
         }
         this.recalculateValues();
@@ -113,13 +130,25 @@ export class ExchangeComponent implements OnInit, OnDestroy {
     const receiveValue: string | null = this.exchangeForm.controls.receive.value;
 
     if (giveValue) {
-      this.calculateReceiveValue(Number(giveValue)).subscribe((newReceiveValue: number) => {
-        this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
-      });
+      if (this.selectedGiveCrypto) {
+        this.calculateReceiveValueCrypto(Number(giveValue)).subscribe((newReceiveValue: number) => {
+          this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
+        });
+      } else {
+        this.calculateReceiveValue(Number(giveValue)).subscribe((newReceiveValue: number) => {
+          this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
+        });
+      }
     } else if (receiveValue) {
-      this.calculateGiveValue(Number(receiveValue)).subscribe((newGiveValue: number) => {
-        this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
-      });
+      if (this.selectedReceiveCrypto) {
+        this.calculateGiveValueCrypto(Number(receiveValue)).subscribe((newGiveValue: number) => {
+          this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
+        });
+      } else {
+        this.calculateGiveValue(Number(receiveValue)).subscribe((newGiveValue: number) => {
+          this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
+        });
+      }
     }
   }
 
@@ -129,11 +158,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       this.exchangeService.selectedReceiveCurrencyRate,
     ]).pipe(
       switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
-        if (this.selectedCrypto) {
-          return of(giveValue / this.selectedCrypto.current_price);
-        } else {
-          return of(giveValue * (receiveRate / giveRate));
-        }
+        return of(giveValue * (receiveRate / giveRate));
       }),
     );
   }
@@ -144,23 +169,40 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       this.exchangeService.selectedReceiveCurrencyRate,
     ]).pipe(
       switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
-        if (this.selectedCrypto) {
-          return of(receiveValue * this.selectedCrypto.current_price);
-        } else {
-          return of(receiveValue * (giveRate / receiveRate));
-        }
+        return of(receiveValue * (giveRate / receiveRate));
       }),
     );
+  }
+
+  //Вычисления значений полей, если в двух инпутах крипта
+  private calculateReceiveValueCrypto(giveValue: number): Observable<number> {
+    if (this.selectedGiveCrypto && this.selectedReceiveCrypto !== null) {
+      return of((giveValue * this.selectedGiveCrypto.current_price) / this.selectedReceiveCrypto.current_price);
+    } else {
+      return of(0);
+    }
+  }
+
+  private calculateGiveValueCrypto(receiveValue: number): Observable<number> {
+    if (this.selectedReceiveCrypto && this.selectedGiveCrypto !== null) {
+      return of((receiveValue * this.selectedReceiveCrypto.current_price) / this.selectedGiveCrypto.current_price);
+    } else {
+      return of(0);
+    }
   }
 
   private changeFieldsForm(): void {
     const tempValue: string | null = this.exchangeForm.controls.give.value;
     const tempImage: string = this.selectedGiveImage;
+    const tempCrypto: AnswerCryptoGecko | null = this.selectedGiveCrypto;
 
     this.exchangeForm.controls.give.setValue(this.exchangeForm.controls.receive.value, {emitEvent: false});
     this.exchangeForm.controls.receive.setValue(tempValue, {emitEvent: false});
 
     this.selectedGiveImage = this.selectedReceiveImage;
     this.selectedReceiveImage = tempImage;
+
+    this.selectedGiveCrypto = this.selectedReceiveCrypto;
+    this.selectedReceiveCrypto = tempCrypto;
   }
 }

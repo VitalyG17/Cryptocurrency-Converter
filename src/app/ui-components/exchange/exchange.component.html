@@ -29,13 +29,30 @@
   <div class="exchange-rate">
     <span class="exchange-rate__title">Курс обмена</span>
     <span class="exchange-rate__current">
-    <span *ngIf="selectedCrypto; else currencyRate">
-      <!--Нужно умножить на rate между валютой и криптой-->
-        1 {{ (selectedCrypto.symbol) | uppercase }}
-      = {{ selectedCrypto.current_price * exchangeService.selectedGiveCurrencyRate.getValue() }}
-      {{ exchangeService.selectedReceiveCurrency.getValue() }}
-    </span>
-    <ng-template #currencyRate>
+    <!-- Пересчет курса между двумя криптовалютами -->
+    <ng-template [ngIf]="selectedGiveCrypto && selectedReceiveCrypto">
+      <span>
+        1 {{ (selectedGiveCrypto.symbol) | uppercase }}
+        = {{ (selectedGiveCrypto.current_price / selectedReceiveCrypto.current_price).toFixed(6) }}
+        {{ (selectedReceiveCrypto.symbol) | uppercase }}
+      </span>
+    </ng-template>
+      <!-- Пересчет курса между криптовалютой и валютой -->
+    <ng-template
+      [ngIf]="(selectedGiveCrypto && !selectedReceiveCrypto) || (!selectedGiveCrypto && selectedReceiveCrypto)">
+      <span *ngIf="selectedGiveCrypto">
+        1 {{ (selectedGiveCrypto.symbol) | uppercase }}
+        = {{ (exchangeService.selectedReceiveCurrencyRate.getValue() * selectedGiveCrypto.current_price).toFixed(6) }}
+        {{ exchangeService.selectedReceiveCurrency.getValue() }}
+      </span>
+      <span *ngIf="selectedReceiveCrypto">
+        1 {{ (selectedReceiveCrypto.symbol) | uppercase }}
+        = {{ (exchangeService.selectedGiveCurrencyRate.getValue() * selectedReceiveCrypto.current_price).toFixed(6) }}
+        {{ exchangeService.selectedGiveCurrency.getValue() }}
+      </span>
+    </ng-template>
+      <!-- Пересчет курса между двумя валютами -->
+    <ng-template [ngIf]="!selectedGiveCrypto && !selectedReceiveCrypto">
       <span>
         1 {{ exchangeService.selectedGiveCurrency.getValue() }}
         = {{ (exchangeService.selectedReceiveCurrencyRate.getValue() / exchangeService.selectedGiveCurrencyRate.getValue()).toFixed(6) }}
