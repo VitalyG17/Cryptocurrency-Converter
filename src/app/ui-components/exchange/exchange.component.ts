@@ -41,13 +41,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .pipe(
         filter((value: string | null) => !!value),
         debounceTime(300),
-        switchMap((value: string | null) => {
-          if (this.selectedGiveCrypto) {
-            return this.calculateReceiveValueCrypto(Number(value));
-          } else {
-            return this.calculateReceiveValue(Number(value));
-          }
-        }),
+        switchMap((value: string | null) => this.calculateReceiveValue(Number(value))),
         takeUntil(this.destroy$),
       )
       .subscribe((receiveValue: number) => {
@@ -59,13 +53,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .pipe(
         filter((value: string | null) => !!value),
         debounceTime(300),
-        switchMap((value: string | null) => {
-          if (this.selectedReceiveCrypto) {
-            return this.calculateGiveValueCrypto(Number(value));
-          } else {
-            return this.calculateGiveValue(Number(value));
-          }
-        }),
+        switchMap((value: string | null) => this.calculateGiveValue(Number(value))),
         takeUntil(this.destroy$),
       )
       .subscribe((giveValue: number) => {
@@ -78,11 +66,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .subscribe((item: BankInfo | AnswerCryptoGecko | null) => {
         if (item) {
           this.selectedGiveImage = item.image;
-          if (isAnswerCryptoGecko(item)) {
-            this.selectedGiveCrypto = item;
-          } else {
-            this.selectedGiveCrypto = null;
-          }
+          this.selectedGiveCrypto = isAnswerCryptoGecko(item) ? item : null;
         }
         this.recalculateValues();
         this.cdr.markForCheck();
@@ -93,11 +77,7 @@ export class ExchangeComponent implements OnInit, OnDestroy {
       .subscribe((item: BankInfo | AnswerCryptoGecko | null) => {
         if (item) {
           this.selectedReceiveImage = item.image;
-          if (isAnswerCryptoGecko(item)) {
-            this.selectedReceiveCrypto = item;
-          } else {
-            this.selectedReceiveCrypto = null;
-          }
+          this.selectedReceiveCrypto = isAnswerCryptoGecko(item) ? item : null;
         }
         this.recalculateValues();
         this.cdr.markForCheck();
@@ -130,64 +110,67 @@ export class ExchangeComponent implements OnInit, OnDestroy {
     const receiveValue: string | null = this.exchangeForm.controls.receive.value;
 
     if (giveValue) {
-      if (this.selectedGiveCrypto) {
-        this.calculateReceiveValueCrypto(Number(giveValue)).subscribe((newReceiveValue: number) => {
-          this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
-        });
-      } else {
-        this.calculateReceiveValue(Number(giveValue)).subscribe((newReceiveValue: number) => {
-          this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
-        });
-      }
+      this.calculateReceiveValue(Number(giveValue)).subscribe((newReceiveValue: number) => {
+        this.exchangeForm.controls.receive.setValue(newReceiveValue.toFixed(6), {emitEvent: false});
+      });
     } else if (receiveValue) {
-      if (this.selectedReceiveCrypto) {
-        this.calculateGiveValueCrypto(Number(receiveValue)).subscribe((newGiveValue: number) => {
-          this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
-        });
-      } else {
-        this.calculateGiveValue(Number(receiveValue)).subscribe((newGiveValue: number) => {
-          this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
-        });
-      }
+      this.calculateGiveValue(Number(receiveValue)).subscribe((newGiveValue: number) => {
+        this.exchangeForm.controls.give.setValue(newGiveValue.toFixed(6), {emitEvent: false});
+      });
     }
   }
 
   private calculateReceiveValue(giveValue: number): Observable<number> {
-    return combineLatest([
-      this.exchangeService.selectedGiveCurrencyRate,
-      this.exchangeService.selectedReceiveCurrencyRate,
-    ]).pipe(
-      switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
-        return of(giveValue * (receiveRate / giveRate));
-      }),
-    );
-  }
-
-  private calculateGiveValue(receiveValue: number): Observable<number> {
-    return combineLatest([
-      this.exchangeService.selectedGiveCurrencyRate,
-      this.exchangeService.selectedReceiveCurrencyRate,
-    ]).pipe(
-      switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
-        return of(receiveValue * (giveRate / receiveRate));
-      }),
-    );
-  }
-
-  //Вычисления значений полей, если в двух инпутах крипта
-  private calculateReceiveValueCrypto(giveValue: number): Observable<number> {
-    if (this.selectedGiveCrypto && this.selectedReceiveCrypto !== null) {
+    if (this.selectedGiveCrypto && !this.selectedReceiveCrypto) {
+      return this.exchangeService.selectedReceiveCurrencyRate.pipe(
+        switchMap((receiveRate: number): Observable<number> => {
+          return of(giveValue * this.selectedGiveCrypto!.current_price * receiveRate);
+        }),
+      );
+    } else if (!this.selectedGiveCrypto && this.selectedReceiveCrypto) {
+      return this.exchangeService.selectedGiveCurrencyRate.pipe(
+        switchMap((giveRate: number): Observable<number> => {
+          return of((giveValue * (1 / giveRate)) / this.selectedReceiveCrypto!.current_price);
+        }),
+      );
+    } else if (this.selectedGiveCrypto && this.selectedReceiveCrypto) {
       return of((giveValue * this.selectedGiveCrypto.current_price) / this.selectedReceiveCrypto.current_price);
     } else {
-      return of(0);
+      return combineLatest([
+        this.exchangeService.selectedGiveCurrencyRate,
+        this.exchangeService.selectedReceiveCurrencyRate,
+      ]).pipe(
+        switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
+          return of(giveValue * (receiveRate / giveRate));
+        }),
+      );
     }
   }
 
-  private calculateGiveValueCrypto(receiveValue: number): Observable<number> {
-    if (this.selectedReceiveCrypto && this.selectedGiveCrypto !== null) {
+  private calculateGiveValue(receiveValue: number): Observable<number> {
+    if (this.selectedReceiveCrypto && !this.selectedGiveCrypto) {
+      return this.exchangeService.selectedGiveCurrencyRate.pipe(
+        switchMap((giveRate: number): Observable<number> => {
+          return of(receiveValue * this.selectedReceiveCrypto!.current_price * giveRate);
+        }),
+      );
+    } else if (!this.selectedReceiveCrypto && this.selectedGiveCrypto) {
+      return this.exchangeService.selectedReceiveCurrencyRate.pipe(
+        switchMap((receiveRate: number): Observable<number> => {
+          return of((receiveValue * (1 / receiveRate)) / this.selectedGiveCrypto!.current_price);
+        }),
+      );
+    } else if (this.selectedReceiveCrypto && this.selectedGiveCrypto) {
       return of((receiveValue * this.selectedReceiveCrypto.current_price) / this.selectedGiveCrypto.current_price);
     } else {
-      return of(0);
+      return combineLatest([
+        this.exchangeService.selectedGiveCurrencyRate,
+        this.exchangeService.selectedReceiveCurrencyRate,
+      ]).pipe(
+        switchMap(([giveRate, receiveRate]: [number, number]): Observable<number> => {
+          return of(receiveValue * (giveRate / receiveRate));
+        }),
+      );
     }
   }
 
