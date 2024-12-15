@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+}
+
+.curr-button {
+  font-weight: 400;
+  font-size: 14px;
+  color: #5c5c5c !important;
+  border-radius: 6px;
+
+  &.active {
+    cursor: pointer;
+    background-color: transparent !important;
+    border: 1px solid #7dbd42;
+    border-radius: 6px;
+    color: #292929 !important;
+  }
+}
+
+.example-button-row {
+  font-size: 14px;
+  padding: 4px 8px 6px 8px !important;
+}
+
+.nav-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  user-select: none;
+}

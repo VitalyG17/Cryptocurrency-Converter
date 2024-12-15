@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="header">
+    <span class="header-title">Обмен</span>
+    <button class="change-btn" mat-mini-fab aria-label="change" (click)="onChangeButtonClick()">
+      <mat-icon style="color: #7DBD42;">sync_alt</mat-icon>
+    </button>
+  </div>
+
+  <form class="form" [formGroup]="exchangeForm">
+    <!--Вы отдаете-->
+    <div class="form__group give">
+      <label class="label first-label" for="give">Отдаете</label>
+      <div class="input-container">
+        <img *ngIf="selectedGiveImage" [src]="selectedGiveImage" class="input-icon" alt="Selected Give Image">
+        <input class="form-input" id="give" type="number" [formControl]="exchangeForm.controls.give">
+      </div>
+    </div>
+
+    <!--Вы получаете-->
+    <div class="form__group receive">
+      <label class="label" for="receive">Получаете</label>
+      <div class="input-container">
+        <img *ngIf="selectedReceiveImage" [src]="selectedReceiveImage" class="input-icon" alt="Selected Receive Image">
+        <input class="form-input" id="receive" type="number" [formControl]="exchangeForm.controls.receive">
+      </div>
+    </div>
+  </form>
+
+  <div class="exchange-rate">
+    <span class="exchange-rate__title">Курс обмена</span>
+    <span class="exchange-rate__current">
+    <!-- Пересчет курса между двумя криптовалютами -->
+    <ng-template [ngIf]="selectedGiveCrypto && selectedReceiveCrypto">
+      <span>
+        1 {{ (selectedGiveCrypto.symbol) | uppercase }}
+        = {{ (selectedGiveCrypto.current_price / selectedReceiveCrypto.current_price).toFixed(6) }}
+        {{ (selectedReceiveCrypto.symbol) | uppercase }}
+      </span>
+    </ng-template>
+      <!-- Пересчет курса между криптовалютой и валютой -->
+    <ng-template
+      [ngIf]="(selectedGiveCrypto && !selectedReceiveCrypto) || (!selectedGiveCrypto && selectedReceiveCrypto)">
+      <span *ngIf="selectedGiveCrypto">
+        1 {{ (selectedGiveCrypto.symbol) | uppercase }}
+        = {{ (exchangeService.selectedReceiveCurrencyRate.getValue() * selectedGiveCrypto.current_price).toFixed(6) }}
+        {{ exchangeService.selectedReceiveCurrency.getValue() }}
+      </span>
+      <span *ngIf="selectedReceiveCrypto">
+        1 {{ (selectedReceiveCrypto.symbol) | uppercase }}
+        = {{ (exchangeService.selectedGiveCurrencyRate.getValue() * selectedReceiveCrypto.current_price).toFixed(6) }}
+        {{ exchangeService.selectedGiveCurrency.getValue() }}
+      </span>
+    </ng-template>
+      <!-- Пересчет курса между двумя валютами -->
+    <ng-template [ngIf]="!selectedGiveCrypto && !selectedReceiveCrypto">
+      <span>
+        1 {{ exchangeService.selectedGiveCurrency.getValue() }}
+        = {{ (exchangeService.selectedReceiveCurrencyRate.getValue() / exchangeService.selectedGiveCurrencyRate.getValue()).toFixed(6) }}
+        {{ exchangeService.selectedReceiveCurrency.getValue() }}
+      </span>
+    </ng-template>
+  </span>
+  </div>
+</div>

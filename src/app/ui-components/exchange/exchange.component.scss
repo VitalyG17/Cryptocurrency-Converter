@@ -1,0 +1,88 @@
+.container {
+  display: block;
+  padding: 24px 24px 41px 24px;
+  width: 397px;
+  border-radius: 20px;
+  box-shadow: 0 0 24px 0 rgba(90, 89, 89, 0.1);
+  background: var(--base);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-title {
+    font-weight: 700;
+    font-size: 24px;
+  }
+}
+
+.change-btn {
+  background: var(--base);;
+}
+
+.exchange-rate {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #5c5c5c;
+  padding: 24px 0 8px;
+
+  &__title {
+    font-weight: 400;
+    font-size: 12px;
+    color: #5c5c5c;
+  }
+
+  &__current {
+    font-weight: 600;
+    font-size: 12px;
+    color: #5c5c5c;
+  }
+}
+
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input {
+  border: 1px solid #c3c3c3;
+  background: #f4f4f4;
+  border-radius: 12px;
+  padding: 12px 12px 12px 60px;
+  outline: none;
+  font-weight: 500;
+  font-size: 16px;
+  width: 100%;
+}
+
+.label {
+  padding: 19px 0 12px;
+}
+
+.first-label {
+  padding-top: 22px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  left: 16px;
+  pointer-events: none;
+}

@@ -1,0 +1,48 @@
+.list {
+  max-height: 398px;
+  padding: 12px 20px;
+
+  &-item {
+    border-radius: 12px !important;
+    align-items: center;
+  }
+
+  &-item:hover {
+    cursor: pointer;
+    background: rgba(176, 221, 99, 0.6);
+  }
+
+  &-item.active {
+    cursor: pointer;
+    background: rgba(176, 221, 99, 0.87);
+  }
+}
+
+mat-list {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+
+  &-thumb {
+    background-color: green;
+    border-radius: 20px;
+  }
+
+  &-track {
+    background: #f4f4f4;
+    border-radius: 20px;
+  }
+}
+
+.img-circle {
+  align-items: center;
+  padding: 8px;
+  width: 48px !important;
+  height: 48px !important;
+  box-shadow: 0 0 8px 0 rgba(40, 46, 34, 0.12);
+  background: var(--base);
+  border-radius: 15px;
+}

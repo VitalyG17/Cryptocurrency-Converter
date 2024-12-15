@@ -1,0 +1,15 @@
+<div class="list-container">
+  <span class="title">{{ title }}</span>
+  <div class="switch-wrapper">
+    <app-switch-button
+      [isCrypto]="isCrypto"
+      (switchOption)="handleSwitch($event)"
+    ></app-switch-button>
+  </div>
+  <app-select-currency [isCrypto]="isCrypto" [isGiveCurrency]="isGive"></app-select-currency>
+  <app-list-item-business
+    [isCrypto]="isCrypto"
+    [cryptoList]="cryptoList"
+    (itemSelected)="onItemSelected($event)">
+  </app-list-item-business>
+</div>

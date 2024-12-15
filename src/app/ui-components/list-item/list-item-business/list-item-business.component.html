@@ -1,0 +1,6 @@
+<app-list-item-ui
+  [items]="isCrypto ? cryptoList : bankList"
+  [isCrypto]="isCrypto"
+  (itemSelected)="onItemSelected($event)">
+  >
+</app-list-item-ui>
